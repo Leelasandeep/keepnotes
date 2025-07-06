@@ -5,6 +5,7 @@ import { connectDB } from './config/db.js';
 import dotenv from 'dotenv';
 import rateLimiter from './middleware/rateLimiter.js';
 import path from 'path';
+import { fileURLToPath } from 'url'; // <-- add this
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ app.use(rateLimiter); // Apply rate limiting middleware
 app.use("/api/notes", notesRoutes);
 
 if (process.env.NODE_ENV === "production") {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
